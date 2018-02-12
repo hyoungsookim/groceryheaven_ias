@@ -1,0 +1,151 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "AWS CloudFormation template for Grocery Heaven development environment v20171030",
+	
+	"Resources" : {
+		"Vpc" : {
+			"Type" : "AWS::EC2::VPC", 
+			"Properties" : {
+				"CidrBlock" : "10.10.0.0/16", 
+				"EnableDnsSupport" : true, 
+				"EnableDnsHostnames" : true, 
+				"InstanceTenancy" : "default", 
+				"Tags" : [ { "Key" : "Name", "Value" : "vpc-uw2-dev" } ]
+			}
+		}, 
+		
+		"VpcDhcpOptions" : { 
+		   "Type" : "AWS::EC2::DHCPOptions",
+		   "Properties" : {
+				"DomainNameServers" : [ "AmazonProvidedDNS" ],
+				"Tags" : [ { "Key" : "Name", "Value" : "dopt-uw2-dev" } ]
+			}
+		}, 
+		"VpcDhcpOptionsAssociation" : { 
+		   "Type" : "AWS::EC2::VPCDHCPOptionsAssociation",
+		   "Properties" : {
+			  "DhcpOptionsId" : "default",
+			  "VpcId" : { "Ref" : "Vpc" }
+			}
+		}, 
+ 		
+		"InternetGateway" : {
+			"Type" : "AWS::EC2::InternetGateway",
+			"Properties" : {
+				"Tags" : [ { "Key" : "Name", "Value" : "igw-uw2-dev" } ]
+			}		
+ 		}, 
+		"InternetGatewayAttachment" : {
+			"Type" : "AWS::EC2::VPCGatewayAttachment",
+			"Properties" : {
+				"InternetGatewayId" : { "Ref" : "InternetGateway" },
+				"VpcId" : { "Ref" : "Vpc" }
+			}
+		},   
+		
+		"PrivateSubnetARds01" : {
+			"Type" : "AWS::EC2::Subnet",
+			"Properties" : {
+				"AvailabilityZone" : "us-west-2a",
+				"CidrBlock" : "10.10.10.0/24",
+				"MapPublicIpOnLaunch" : false,
+				"Tags" : [ { "Key" : "Name", "Value" : "subnet-uw2a-dev-rds-01" } ],
+				"VpcId" : { "Ref" : "Vpc" }				
+			}
+		},
+		"PrivateSubnetBRds01" : {
+			"Type" : "AWS::EC2::Subnet",
+			"Properties" : {
+				"AvailabilityZone" : "us-west-2b",
+				"CidrBlock" : "10.10.11.0/24",
+				"MapPublicIpOnLaunch" : false,
+				"Tags" : [ { "Key" : "Name", "Value" : "subnet-uw2b-dev-rds-01" } ],
+				"VpcId" : { "Ref" : "Vpc" }				
+			}
+		},
+		"PrivateSubnetCRds01" : {
+			"Type" : "AWS::EC2::Subnet",
+			"Properties" : {
+				"AvailabilityZone" : "us-west-2c",
+				"CidrBlock" : "10.10.12.0/24",
+				"MapPublicIpOnLaunch" : false,
+				"Tags" : [ { "Key" : "Name", "Value" : "subnet-uw2c-dev-rds-01" } ],
+				"VpcId" : { "Ref" : "Vpc" }				
+			}
+		}, 
+		"PublicSubnetASsh01" : {
+			"Type" : "AWS::EC2::Subnet",
+			"Properties" : {
+				"AvailabilityZone" : "us-west-2a",
+				"CidrBlock" : "10.10.99.0/24",
+				"MapPublicIpOnLaunch" : true,
+				"Tags" : [ { "Key" : "Name", "Value" : "subnet-uw2a-dev-ssh-01" } ],
+				"VpcId" : { "Ref" : "Vpc" }				
+			}
+		}, 
+		
+		"PrivateRouteTable" : {
+			"Type" : "AWS::EC2::RouteTable",
+			"Properties" : {
+				"VpcId" : { "Ref" : "Vpc" },
+				"Tags" : [ { "Key" : "Name", "Value" : "rtb-uw2a-dev-rds" } ]
+			}
+		}, 
+		"SshRouteTable" : {
+			"Type" : "AWS::EC2::RouteTable",
+			"Properties" : {
+				"VpcId" : { "Ref" : "Vpc" },
+				"Tags" : [ { "Key" : "Name", "Value" : "rtb-uw2a-dev-ssh" } ]
+			}
+		}, 
+				
+		"PrivateSubnetRouteTableAssociation1" : {
+			"Type" : "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties" : {
+				"RouteTableId" : { "Ref" : "PrivateRouteTable" }, 
+				"SubnetId" : { "Ref" : "PrivateSubnetARds01" }
+			}		
+		}, 
+		"PrivateSubnetRouteTableAssociation2" : {
+			"Type" : "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties" : {
+				"RouteTableId" : { "Ref" : "PrivateRouteTable" }, 
+				"SubnetId" : { "Ref" : "PrivateSubnetBRds01" }
+			}		
+		}, 
+		"PrivateSubnetRouteTableAssociation3" : {
+			"Type" : "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties" : {
+				"RouteTableId" : { "Ref" : "PrivateRouteTable" }, 
+				"SubnetId" : { "Ref" : "PrivateSubnetCRds01" }
+			}		
+		}, 
+		
+		"SshSecurityGroup" : {
+			"Type" : "AWS::EC2::SecurityGroup",
+			"Properties" : {
+				"GroupName" : "ssh-group",
+				"GroupDescription" : "Security group for SSH access",
+				"SecurityGroupIngress" : [ { "" : "tcp", "fromPort" : "22", "toPort" : "22", "CidrIp" : "" } ],
+				"Tags" :  [ { "Key" : "Name", "Value" : "sg-uw2a-dev-ssh" } ],
+				"VpcId" : { "Ref" : "Vpc" } 
+			}
+		}, 
+		
+		
+		"Acl" : {
+		   "Type" : "AWS::EC2::NetworkAcl",
+		   "Properties" : {
+			  "Tags" : [ { "Key" : "Name", "Value" : "acl-uw2-dev-rds" } ],
+			  "VpcId" : { "Ref" : "Vpc" }
+		   }		
+		}, 
+	}, 
+	
+	"Outputs" : {
+		"VpcId" : {
+			"Description" : "This is created new Vpc Id.", 
+			"Value" : { "Ref" : "Vpc" }
+		}
+	}
+}
