@@ -1,2 +1,2 @@
 # groceryheaven_ias
-Grocery Heaven infrastructure as Code
+Grocery Heaven infrastructure as Code on AWS
