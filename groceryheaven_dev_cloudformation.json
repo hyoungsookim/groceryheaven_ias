@@ -28,7 +28,7 @@
 		"VpcDhcpOptionsAssociation" : { 
 		   "Type" : "AWS::EC2::VPCDHCPOptionsAssociation",
 		   "Properties" : {
-			  "DhcpOptionsId" : "default",
+			  "DhcpOptionsId" : { "Ref" : "VpcDhcpOptions" },
 			  "VpcId" : { "Ref" : "Vpc" }
 			}
 		}, 
@@ -142,7 +142,7 @@
 		"SecurityGroupSsh" : {
 			"Type" : "AWS::EC2::SecurityGroup",
 			"Properties" : {
-				"GroupName" : "sg-group-ssh",
+				"GroupName" : "sgsshgroup",
 				"GroupDescription" : "Security group for SSH access",
 				"SecurityGroupIngress" : [ 
 					{ "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "10.20.0.0/16" } 
@@ -152,7 +152,7 @@
 				],
 				"VpcId" : { "Ref" : "Vpc" } 
 			}
-		}, 
+		},
 		
 		
 		"Acl" : {
