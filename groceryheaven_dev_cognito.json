@@ -1,0 +1,68 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "AWS CloudFormation template for Grocery Heaven development environment v20171030",
+
+	"Resources" : {
+        "UserPool" : {
+            "Type" : "AWS::Cognito::UserPool",
+            "Properties" : {
+                "AutoVerifiedAttributes" : "email",
+                "DeviceConfiguration" : {
+                    "ChallengeRequiredOnNewDevice" : true,
+                    "DeviceOnlyRememberedOnUserPrompt" : false
+                },
+                "EmailConfiguration" : {
+                    "ReplyToEmailAddress" : "REPLY-TO Email address",
+                    "SourceArn" : ""
+                },
+                "EmailVerificationMessage" : "Grocery Heaven email verification message",
+                "EmailVerificationSubject" : "Welcome to Grocery Heaven",
+                "Policies" : {
+                    "PasswordPolicy" : {
+                        "MinimumLength" : 8,
+                        "RequireLowercase" : true,
+                        "RequireNumbers" : true,
+                        "RequireSymbols" : true,
+                        "RequireUppercase" : true                  }
+                },
+                "UserPoolName" : "gh-cognito-dev-user-pool",
+                "Schema" : [ 
+                    {
+                        "name" : "email",
+                        "AttributeDataType" : "String",
+                        "DeveloperOnlyAttribute" : false,
+                        "Mutable" : true,
+                        "Required" : true
+                    },
+                    {
+                        "name" : "picture",
+                        "DeveloperOnlyAttribute" : false,
+                        "Mutable" : true,
+                        "Required" : false
+                    },
+                    {
+                        "name" : "family name",
+                        "AttributeDataType" : "String",
+                        "DeveloperOnlyAttribute" : false,
+                        "Mutable" : true,
+                        "Required" : false
+                    },
+                    {
+                        "name" : "given name",
+                        "AttributeDataType" : "String",
+                        "DeveloperOnlyAttribute" : false,
+                        "Mutable" : true,
+                        "Required" : false
+                    },
+                    {
+                        "name" : "updated at",
+                        "AttributeDataType" : "DateTime",
+                        "DeveloperOnlyAttribute" : false,
+                        "Mutable" : true,
+                        "Required" : false
+                    }
+                ]
+            }            
+        }
+    }
+}
