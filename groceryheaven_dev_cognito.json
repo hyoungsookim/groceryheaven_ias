@@ -35,28 +35,15 @@
                         "Required" : true
                     },
                     {
-                        "name" : "picture",
-                        "DeveloperOnlyAttribute" : false,
-                        "Mutable" : true,
-                        "Required" : false
-                    },
-                    {
-                        "name" : "family name",
+                        "name" : "family_name",
                         "AttributeDataType" : "String",
                         "DeveloperOnlyAttribute" : false,
                         "Mutable" : true,
                         "Required" : false
                     },
                     {
-                        "name" : "given name",
+                        "name" : "given_name",
                         "AttributeDataType" : "String",
-                        "DeveloperOnlyAttribute" : false,
-                        "Mutable" : true,
-                        "Required" : false
-                    },
-                    {
-                        "name" : "updated at",
-                        "AttributeDataType" : "DateTime",
                         "DeveloperOnlyAttribute" : false,
                         "Mutable" : true,
                         "Required" : false
