@@ -28,21 +28,21 @@
                 "UserPoolName" : "gh-cognito-dev-user-pool",
                 "Schema" : [ 
                     {
-                        "name" : "email",
+                        "Name" : "email",
                         "AttributeDataType" : "String",
                         "DeveloperOnlyAttribute" : false,
                         "Mutable" : true,
                         "Required" : true
                     },
                     {
-                        "name" : "family_name",
+                        "Name" : "family_name",
                         "AttributeDataType" : "String",
                         "DeveloperOnlyAttribute" : false,
                         "Mutable" : true,
                         "Required" : false
                     },
                     {
-                        "name" : "given_name",
+                        "Name" : "given_name",
                         "AttributeDataType" : "String",
                         "DeveloperOnlyAttribute" : false,
                         "Mutable" : true,
