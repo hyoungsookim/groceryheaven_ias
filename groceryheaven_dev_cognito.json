@@ -1,21 +1,20 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
-	"Description": "AWS CloudFormation template for Grocery Heaven development environment v20171030",
+	"Description": "AWS CloudFormation template for Grocery Heaven development environment v2018.05.06",
 
 	"Resources" : {
         "UserPool" : {
             "Type" : "AWS::Cognito::UserPool",
             "Properties" : {
-                "AutoVerifiedAttributes" : "email",
+                "AutoVerifiedAttributes" : [ "email" ],
                 "DeviceConfiguration" : {
                     "ChallengeRequiredOnNewDevice" : true,
                     "DeviceOnlyRememberedOnUserPrompt" : false
                 },
                 "EmailConfiguration" : {
-                    "ReplyToEmailAddress" : "REPLY-TO Email address",
-                    "SourceArn" : ""
+                    "ReplyToEmailAddress" : "noreply@service.com"
                 },
-                "EmailVerificationMessage" : "Grocery Heaven email verification message",
+                "EmailVerificationMessage" : "Grocery Heaven email verification message - {####}",
                 "EmailVerificationSubject" : "Welcome to Grocery Heaven",
                 "Policies" : {
                     "PasswordPolicy" : {
@@ -51,5 +50,12 @@
                 ]
             }            
         }
-    }
+    },
+
+	"Outputs" : {
+		"UserPoolId" : {
+			"Description" : "This is created new Cognito UserPool Id.", 
+			"Value" : { "Ref" : "UserPool" }
+		}
+	}
 }
