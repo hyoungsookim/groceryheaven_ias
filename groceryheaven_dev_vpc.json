@@ -6,7 +6,7 @@
 		"Vpc" : {
 			"Type" : "AWS::EC2::VPC", 
 			"Properties" : {
-				"CidrBlock" : "10.20.0.0/16", 
+				"CidrBlock" : "10.30.0.0/16", 
 				"EnableDnsSupport" : true, 
 				"EnableDnsHostnames" : true, 
 				"InstanceTenancy" : "default", 
@@ -53,7 +53,7 @@
 			"Type" : "AWS::EC2::Subnet",
 			"Properties" : {
 				"AvailabilityZone" : "us-west-2a",
-				"CidrBlock" : "10.20.10.0/24",
+				"CidrBlock" : "10.30.10.0/24",
 				"MapPublicIpOnLaunch" : false,
 				"Tags" : [ 
 					{ "Key" : "Name", "Value" : "subnet-uw2a-dev-db-01" } 
@@ -65,7 +65,7 @@
 			"Type" : "AWS::EC2::Subnet",
 			"Properties" : {
 				"AvailabilityZone" : "us-west-2b",
-				"CidrBlock" : "10.20.11.0/24",
+				"CidrBlock" : "10.30.11.0/24",
 				"MapPublicIpOnLaunch" : false,
 				"Tags" : [ 
 					{ "Key" : "Name", "Value" : "subnet-uw2b-dev-db-01" } 
@@ -77,7 +77,7 @@
 			"Type" : "AWS::EC2::Subnet",
 			"Properties" : {
 				"AvailabilityZone" : "us-west-2c",
-				"CidrBlock" : "10.20.12.0/24",
+				"CidrBlock" : "10.30.12.0/24",
 				"MapPublicIpOnLaunch" : false,
 				"Tags" : [ 
 					{ "Key" : "Name", "Value" : "subnet-uw2c-dev-db-01" } 
@@ -89,7 +89,7 @@
 			"Type" : "AWS::EC2::Subnet",
 			"Properties" : {
 				"AvailabilityZone" : "us-west-2a",
-				"CidrBlock" : "10.20.100.1/24",
+				"CidrBlock" : "10.30.100.0/24",
 				"MapPublicIpOnLaunch" : true,
 				"Tags" : [ 
 					{ "Key" : "Name", "Value" : "subnet-uw2a-dev-ssh-01" } 
@@ -97,7 +97,19 @@
 				"VpcId" : { "Ref" : "Vpc" }				
 			}
 		}, 
-		
+		"SubnetAPublicNat01" : {
+			"Type" : "AWS::EC2::Subnet",
+			"Properties" : {
+				"AvailabilityZone" : "us-west-2a",
+				"CidrBlock" : "10.30.101.0/24",
+				"MapPublicIpOnLaunch" : true,
+				"Tags" : [ 
+					{ "Key" : "Name", "Value" : "subnet-uw2a-dev-nat-01" } 
+				],
+				"VpcId" : { "Ref" : "Vpc" }				
+			}
+		},
+
 		"RouteTableDb" : {
 			"Type" : "AWS::EC2::RouteTable",
 			"Properties" : {
@@ -116,7 +128,16 @@
 				]
 			}
 		}, 
-				
+		"RouteTableNat" : {
+			"Type" : "AWS::EC2::RouteTable",
+			"Properties" : {
+				"VpcId" : { "Ref" : "Vpc" },
+				"Tags" : [ 
+					{ "Key" : "Name", "Value" : "rtb-uw2a-dev-nat" } 
+				]
+			}
+		}, 
+
 		"SubnetRouteTableAssociation1Private" : {
 			"Type" : "AWS::EC2::SubnetRouteTableAssociation",
 			"Properties" : {
@@ -154,14 +175,13 @@
 			}
 		},
 		
-		
 		"Acl" : {
 		   "Type" : "AWS::EC2::NetworkAcl",
 		   "Properties" : {
-			  "Tags" : [
+			  	"Tags" : [
 					{ "Key" : "Name", "Value" : "acl-uw2-dev" } 
 				],
-			  "VpcId" : { "Ref" : "Vpc" }
+			  	"VpcId" : { "Ref" : "Vpc" }
 		   }		
 		}
 	}, 
