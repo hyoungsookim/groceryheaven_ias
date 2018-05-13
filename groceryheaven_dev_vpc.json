@@ -16,6 +16,13 @@
 			}
 		}, 
 		
+		"VpcIpv6CidrBlock" : {
+			"Type" : "AWS::EC2::VPCCidrBlock",
+			"Properties" : {
+				"AmazonProvidedIpv6CidrBlock" : true,
+				"VpcId" : { "Ref" : "Vpc" }
+			}
+		},
 		"VpcDhcpOptions" : { 
 		   "Type" : "AWS::EC2::DHCPOptions",
 		   "Properties" : {
@@ -49,6 +56,16 @@
 			}
 		},   
 		
+		"Acl" : {
+			"Type" : "AWS::EC2::NetworkAcl",
+			"Properties" : {
+				"Tags" : [
+					{ "Key" : "Name", "Value" : "acl-uw2-dev" } 
+				],
+				"VpcId" : { "Ref" : "Vpc" }
+			}		
+		},
+
 		"SubnetAPrivateDb01" : {
 			"Type" : "AWS::EC2::Subnet",
 			"Properties" : {
@@ -107,6 +124,42 @@
 					{ "Key" : "Name", "Value" : "subnet-uw2a-dev-nat-01" } 
 				],
 				"VpcId" : { "Ref" : "Vpc" }				
+			}
+		},
+
+		"SubnetAPrivateDb01AclAssociation" : {
+			"Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+			"Properties" : {
+				"SubnetId" : { "Ref" : "SubnetAPrivateDb01" },
+				"NetworkAclId" : { "Ref" : "Acl" }
+			}
+		},
+		"SubnetBPrivateDb01AclAssociation" : {
+			"Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+			"Properties" : {
+				"SubnetId" : { "Ref" : "SubnetBPrivateDb01" },
+				"NetworkAclId" : { "Ref" : "Acl" }
+			}
+		},
+		"SubnetCPrivateDb01AclAssociation" : {
+			"Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+			"Properties" : {
+				"SubnetId" : { "Ref" : "SubnetCPrivateDb01" },
+				"NetworkAclId" : { "Ref" : "Acl" }
+			}
+		},
+		"SubnetAPublicSsh01AclAssociation" : {
+			"Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+			"Properties" : {
+				"SubnetId" : { "Ref" : "SubnetAPublicSsh01" },
+				"NetworkAclId" : { "Ref" : "Acl" }
+			}
+		},
+		"SubnetAPublicNat01AclAssociation" : {
+			"Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+			"Properties" : {
+				"SubnetId" : { "Ref" : "SubnetAPublicNat01" },
+				"NetworkAclId" : { "Ref" : "Acl" }
 			}
 		},
 
@@ -174,18 +227,46 @@
 				"VpcId" : { "Ref" : "Vpc" } 
 			}
 		},
-		
-		"Acl" : {
-		   "Type" : "AWS::EC2::NetworkAcl",
-		   "Properties" : {
-			  	"Tags" : [
-					{ "Key" : "Name", "Value" : "acl-uw2-dev" } 
-				],
-			  	"VpcId" : { "Ref" : "Vpc" }
-		   }		
+
+		"Nat" : {
+			"Type" : "AWS::EC2::NatGateway",
+			"Properties" : {
+				"AllocationId" : { 
+					"Fn::GetAtt" : [ 
+						"NatEip", 
+						"AllocationId" 
+					] 
+				},
+				"SubnetId" : { "Ref" : "SubnetAPublicNat01" },
+				"Tags" : [
+					{ "Key" : "Name", "Value" : "nat-uw2a-dev-" }
+				]
+			}
+		},
+		"NatAttachment" : {
+			"Type" : "AWS::EC2::VPCGatewayAttachment",
+			"Properties" : {
+				"InternetGatewayId" : { "Ref" : "InternetGateway" },
+				"VpcId" : { "Ref" : "Vpc" }
+			}
+		},
+		"NatEip" : {
+			"Type" : "AWS::EC2::EIP",
+			"Properties" : {
+				"Domain" : "vpc"
+			}
+		},
+		"NatRoute" : {
+			"Type" : "AWS::EC2::Route",
+			"Properties" : {
+				"RouteTableId" : { "Ref" : "RouteTableNat" },
+				"DestinationCidrBlock" : "0.0.0.0/0",
+				"NatGatewayId" : { "Ref" : "Nat" }
+			}
 		}
+		
 	}, 
-	
+
 	"Outputs" : {
 		"VpcId" : {
 			"Description" : "This is created new Vpc Id.", 
