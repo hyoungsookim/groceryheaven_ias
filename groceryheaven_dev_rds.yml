@@ -2,23 +2,24 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "AWS CloudFormation template for Grocery Heaven development environment v20171030"
 
 Resources: 
-  DbSubnetGroup:
+  RdsSubnetGroup:
     Type: "AWS::RDS::DBSubnetGroup"
     Properties:
       DBSubnetGroupDescription: "DB subnet group for development environment"
-      DBSubnetGroupName:
+      DBSubnetGroupName: rds-subnet-group-uw2-dev
       SubnetIds:
-      Tags:
-        - Key: "Name"
-          Value: "db-subnet-group-uw2-dev"
+        - "subnet-817ecfca"
+        - "subnet-ba8116c3"
+        - "subnet-714c252b"
   
-  DbSecurityGroup:
+  RdsSecurityGroup:
     Type: "AWS::RDS::DBSecurityGroup"
     Properties:
+      GroupDescription: "DB security group for development environment"
       DBSecurityGroupIngress:
         EC2SecurityGroupName: sg-0541b69472d479c3e
 
-  ProductMasterDb:
+  RdsProductMasterDb:
     Type: "AWS::RDS::DBInstance"
     Properties:
       AllocatedStorage: 20
@@ -26,21 +27,13 @@ Resources:
       DBInstanceClass: db.t2.micro
       DBInstanceIdentifier: rds-uws2a-product-dev-001
       DBName: db_product
-      DBSecurityGroups: !Ref 'DbSecurityGroup'
-      DBSubnetGroupName: !Ref 'DbSubnetGroup'
+      DBSubnetGroupName: !Ref 'RdsSubnetGroup'
       Engine: MySQL
       EngineVersion: 5.7.19
       MasterUsername: root
       MasterUserPassword: rmfhtjflgpqms2018$
-      MonitoringInterval: 60
       Port: 3306
       PubliclyAccessible: false
       VPCSecurityGroups:
+        - sg-0541b69472d479c3e
 
-Outputs:
-  EndPointAddress:
-    Description: "Product master database endpoint address"
-    Value:
-  EndPointPort:
-    Description: "Product master database endpoint port"
-    Value:
