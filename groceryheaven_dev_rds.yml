@@ -12,13 +12,13 @@ Resources:
         - "subnet-ba8116c3"
         - "subnet-714c252b"
   
-  DbSecurityGroup:
-    Type: "AWS::RDS::DBSecurityGroup"
-    Properties:
-      GroupDescription: "DB security group for development environment"
-      EC2VpcId: "vpc-badfe8c3"
-      DBSecurityGroupIngress:
-        - EC2SecurityGroupId: sg-0541b69472d479c3e
+  #DbSecurityGroup:
+  #  Type: "AWS::RDS::DBSecurityGroup"
+  #  Properties:
+  #    GroupDescription: "DB security group for development environment"
+  #    EC2VpcId: "vpc-badfe8c3"
+  #    DBSecurityGroupIngress:
+  #      - EC2SecurityGroupId: sg-0541b69472d479c3e
 
   DbInstanceProductMaster:
     Type: "AWS::RDS::DBInstance"
@@ -28,8 +28,6 @@ Resources:
       DBInstanceClass: db.t2.micro
       DBInstanceIdentifier: rds-uw2a-pd-dev-002
       DBName: db_product
-      DBSecurityGroups:
-        - Ref: DbSecurityGroup
       DBSubnetGroupName: !Ref 'DbSubnetGroup'
       Engine: MySQL
       EngineVersion: 5.7.19
@@ -37,4 +35,5 @@ Resources:
       MasterUserPassword: rmfhtjflgpqms2018$
       Port: 3306
       PubliclyAccessible: false
-
+      VPCSecurityGroups: 
+        - sg-0541b69472d479c3e
