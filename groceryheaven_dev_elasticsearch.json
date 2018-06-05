@@ -1,0 +1,44 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "AWS CloudFormation template for Grocery Heaven development environment v2018.05.06",
+
+    "Resources" : {
+        "ElasticsearchDomain" : {
+            "Type" : "AWS::Elasticsearch::Domain",
+            "Properties" : {
+                "DomainName" : "elasticsearch-uw2-dev",
+                "ElasticsearchVersion" : "6.2",
+                "ElasticsearchClusterConfig" : {
+                    "DedicatedMasterEnabled" : "false",
+                    "InstanceType" : "t2.small.elasticsearch",
+                    "InstanceCount" : "1", 
+                    "ZoneAwarenessEnabled" : "false"
+                },
+                "EBSOptions" : {
+                    "EBSEnabled" : true,
+                    "Iops" : 0,
+                    "VolumeSize" : 10,
+                    "VolumeType" : "gp2"
+                },
+                "SnapshotOptions" : {
+                    "AutomatedSnapshotStartHour" : 0
+                },
+                "VPCOptions" : {
+                    "SubnetIds" : [ "subnet-ed7ccda6" ],
+                    "SecurityGroupIds" : [ "sg-0541b69472d479c3e" ]
+                },
+                "AccessPolicies" : {
+                    "Version" : "2012-10-17",
+                    "Statement" : [
+                        {
+                            "Effect" : "Allow",
+                            "Principal" : { "AWS" : "*" },
+                            "Action" : "es:*",
+                            "Resource" : "arn:aws:es:us-west-2:309998379810:domain/es-uw2-dev/*"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
