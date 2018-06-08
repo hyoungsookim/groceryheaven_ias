@@ -280,7 +280,8 @@
 				"GroupName" : "sgdevdbgroup",
 				"GroupDescription" : "Security group for database access",
 				"SecurityGroupIngress" : [ 
-					{ "IpProtocol" : "tcp", "FromPort" : "3306", "ToPort" : "3306", "CidrIp" : "0.0.0.0/0" } 
+					{ "IpProtocol" : "tcp", "FromPort" : "3306", "ToPort" : "3306", "CidrIp" : "0.0.0.0/0" },
+					{ "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" } 
 				],
 				"Tags" :  [ 
 					{ "Key" : "Name", "Value" : "sg-uw2-dev-db" } 
