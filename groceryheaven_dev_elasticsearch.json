@@ -34,7 +34,7 @@
                             "Effect" : "Allow",
                             "Principal" : { "AWS" : "*" },
                             "Action" : "es:*",
-                            "Resource" : "arn:aws:es:us-west-2:309998379810:domain/es-uw2-dev/*"
+                            "Resource" : "arn:aws:es:us-west-2:309998379810:domain/elasticsearch-uw2-dev/*"
                         }
                     ]
                 }
