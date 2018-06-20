@@ -323,6 +323,14 @@
 			"Properties" : {
 				"RouteTableId" : { "Ref" : "RouteTableNat" },
 				"DestinationCidrBlock" : "0.0.0.0/0",
+				"GatewayId" : { "Ref" : "InternetGateway" }
+			}
+		},
+		"DbRoute" : {
+			"Type" : "AWS::EC2::Route",
+			"Properties" : {
+				"RouteTableId" : { "Ref" : "RouteTableDb" },
+				"DestinationCidrBlock" : "0.0.0.0/0",
 				"NatGatewayId" : { "Ref" : "Nat" }
 			}
 		}
