@@ -12,14 +12,6 @@ Resources:
         - "subnet-ba8116c3"
         - "subnet-714c252b"
   
-  #DbSecurityGroup:
-  #  Type: "AWS::RDS::DBSecurityGroup"
-  #  Properties:
-  #    GroupDescription: "DB security group for development environment"
-  #    EC2VpcId: "vpc-badfe8c3"
-  #    DBSecurityGroupIngress:
-  #      - EC2SecurityGroupId: sg-0541b69472d479c3e
-
   DbInstanceProductMaster:
     Type: "AWS::RDS::DBInstance"
     Properties:
