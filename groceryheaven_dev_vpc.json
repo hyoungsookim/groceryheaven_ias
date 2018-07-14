@@ -125,6 +125,18 @@
 				"VpcId" : { "Ref" : "Vpc" }				
 			}
 		}, 
+		"SubnetAPrivateApi01" : {
+			"Type" : "AWS::EC2::Subnet",
+			"Properties" : {
+				"AvailabilityZone" : "us-west-2a",
+				"CidrBlock" : "10.30.90.0/24",
+				"MapPublicIpOnLaunch" : false,
+				"Tags" : [ 
+					{ "Key" : "Name", "Value" : "subnet-uw2a-dev-api-01" } 
+				],
+				"VpcId" : { "Ref" : "Vpc" }				
+			}
+		},
 		"SubnetAPublicSsh01" : {
 			"Type" : "AWS::EC2::Subnet",
 			"Properties" : {
@@ -171,6 +183,13 @@
 				"NetworkAclId" : { "Ref" : "Acl" }
 			}
 		},
+		"SubnetAPrivateApi01AclAssociation" : {
+			"Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+			"Properties" : {
+				"SubnetId" : { "Ref" : "SubnetAPrivateApi01" },
+				"NetworkAclId" : { "Ref" : "Acl" }
+			}
+		},
 		"SubnetAPublicSsh01AclAssociation" : {
 			"Type" : "AWS::EC2::SubnetNetworkAclAssociation",
 			"Properties" : {
@@ -192,6 +211,15 @@
 				"VpcId" : { "Ref" : "Vpc" },
 				"Tags" : [ 
 					{ "Key" : "Name", "Value" : "rtb-uw2a-dev-db" } 
+				]
+			}
+		}, 
+		"RouteTableApi" : {
+			"Type" : "AWS::EC2::RouteTable",
+			"Properties" : {
+				"VpcId" : { "Ref" : "Vpc" },
+				"Tags" : [ 
+					{ "Key" : "Name", "Value" : "rtb-uw2a-dev-api" } 
 				]
 			}
 		}, 
@@ -243,20 +271,27 @@
 			"Properties" : {
 				"RouteTableId" : { "Ref" : "RouteTableDb" }, 
 				"SubnetId" : { "Ref" : "SubnetAPrivateDb01" }
-			}		
+			}
 		}, 
 		"SubnetRouteTableAssociation2Private" : {
 			"Type" : "AWS::EC2::SubnetRouteTableAssociation",
 			"Properties" : {
 				"RouteTableId" : { "Ref" : "RouteTableDb" }, 
 				"SubnetId" : { "Ref" : "SubnetBPrivateDb01" }
-			}		
+			}
 		}, 
 		"SubnetRouteTableAssociation3Private" : {
 			"Type" : "AWS::EC2::SubnetRouteTableAssociation",
 			"Properties" : {
 				"RouteTableId" : { "Ref" : "RouteTableDb" }, 
 				"SubnetId" : { "Ref" : "SubnetCPrivateDb01" }
+			}
+		}, 
+		"SubnetRouteTableAssociationPrivateApi01" : {
+			"Type" : "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties" : {
+				"RouteTableId" : { "Ref" : "RouteTableApi" }, 
+				"SubnetId" : { "Ref" : "SubnetAPrivateApi01" }
 			}		
 		}, 
 		
@@ -285,6 +320,23 @@
 				],
 				"Tags" :  [ 
 					{ "Key" : "Name", "Value" : "sg-uw2-dev-db" } 
+				],
+				"VpcId" : { "Ref" : "Vpc" } 
+			}
+		},
+		"SecurityGroupApi" : {
+			"Type" : "AWS::EC2::SecurityGroup",
+			"Properties" : {
+				"GroupName" : "sgdevapigroup",
+				"GroupDescription" : "Security group for API access",
+				"SecurityGroupIngress" : [ 
+					{ "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0" },
+					{ "IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0" },
+					{ "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" },
+					{ "IpProtocol" : "tcp", "FromPort" : "3306", "ToPort" : "3306", "CidrIp" : "0.0.0.0/0" }
+				],
+				"Tags" :  [ 
+					{ "Key" : "Name", "Value" : "sg-uw2-dev-api" } 
 				],
 				"VpcId" : { "Ref" : "Vpc" } 
 			}
@@ -330,6 +382,14 @@
 			"Type" : "AWS::EC2::Route",
 			"Properties" : {
 				"RouteTableId" : { "Ref" : "RouteTableDb" },
+				"DestinationCidrBlock" : "0.0.0.0/0",
+				"NatGatewayId" : { "Ref" : "Nat" }
+			}
+		},
+		"ApiRoute" : {
+			"Type" : "AWS::EC2::Route",
+			"Properties" : {
+				"RouteTableId" : { "Ref" : "RouteTableApi" },
 				"DestinationCidrBlock" : "0.0.0.0/0",
 				"NatGatewayId" : { "Ref" : "Nat" }
 			}
