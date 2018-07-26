@@ -16,7 +16,7 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "ec2-uw2a-ssh-dev-001"
+                        "Value": "ec2-uw2a-dev-ssh-001"
                     }
                 ]
             }
@@ -38,7 +38,7 @@
             },
             "Properties": { 
                 "AvailabilityZone": "us-west-2a",
-                "ImageId": "ami-6b8cef13",
+                "ImageId": "ami-a9d09ed1",
                 "KeyName": "key-pair-uw2-dev",
                 "InstanceType": "t2.micro",
                 "IamInstanceProfile": "CodeDeploy-EC2-Instance-Profile",
@@ -48,7 +48,7 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "ec2-uw2a-api-dev"
+                        "Value": "ec2-uw2a-dev-api"
                     }
                 ],
                 "UserData": {
