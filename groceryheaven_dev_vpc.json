@@ -353,7 +353,7 @@
 				},
 				"SubnetId" : { "Ref" : "SubnetAPublicNat01" },
 				"Tags" : [
-					{ "Key" : "Name", "Value" : "nat-uw2a-dev-" }
+					{ "Key" : "Name", "Value" : "nat-uw2a-dev" }
 				]
 			}
 		},
