@@ -342,56 +342,12 @@
 			}
 		},
 
-		"Nat" : {
-			"Type" : "AWS::EC2::NatGateway",
-			"Properties" : {
-				"AllocationId" : { 
-					"Fn::GetAtt" : [ 
-						"NatEip", 
-						"AllocationId" 
-					] 
-				},
-				"SubnetId" : { "Ref" : "SubnetAPublicNat01" },
-				"Tags" : [
-					{ "Key" : "Name", "Value" : "nat-uw2a-dev" }
-				]
-			}
-		},
-		"NatAttachment" : {
-			"Type" : "AWS::EC2::VPCGatewayAttachment",
-			"Properties" : {
-				"InternetGatewayId" : { "Ref" : "InternetGateway" },
-				"VpcId" : { "Ref" : "Vpc" }
-			}
-		},
-		"NatEip" : {
-			"Type" : "AWS::EC2::EIP",
-			"Properties" : {
-				"Domain" : "vpc"
-			}
-		},
 		"NatRoute" : {
 			"Type" : "AWS::EC2::Route",
 			"Properties" : {
 				"RouteTableId" : { "Ref" : "RouteTableNat" },
 				"DestinationCidrBlock" : "0.0.0.0/0",
 				"GatewayId" : { "Ref" : "InternetGateway" }
-			}
-		},
-		"DbRoute" : {
-			"Type" : "AWS::EC2::Route",
-			"Properties" : {
-				"RouteTableId" : { "Ref" : "RouteTableDb" },
-				"DestinationCidrBlock" : "0.0.0.0/0",
-				"NatGatewayId" : { "Ref" : "Nat" }
-			}
-		},
-		"ApiRoute" : {
-			"Type" : "AWS::EC2::Route",
-			"Properties" : {
-				"RouteTableId" : { "Ref" : "RouteTableApi" },
-				"DestinationCidrBlock" : "0.0.0.0/0",
-				"NatGatewayId" : { "Ref" : "Nat" }
 			}
 		}
 		
