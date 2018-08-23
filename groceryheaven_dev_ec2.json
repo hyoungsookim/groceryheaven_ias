@@ -48,7 +48,7 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "ec2-uw2a-dev-api"
+                        "Value": "ec2-uw2a-dev-prd-api"
                     }
                 ],
                 "UserData": {
