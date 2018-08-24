@@ -1,0 +1,35 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "S3 buckets for Grocery Heaven",
+
+    "Resources": {
+        "S3BucketOriginalProductImage": {
+            "Type": "AWS::S3::Bucket",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "BucketName": "image-dev-original-product",
+                "AccessControl": "Private"
+            }
+        }
+    },
+
+    "Outputs": {
+        "S3BucketOriginalProductImageUrl": {
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "https://",
+                        {
+                            "Fn::GetAtt": [
+                                "S3BucketOriginalProductImage",
+                                "DomainName"
+                            ]
+                        }
+                    ]
+                ]
+            }
+        }
+    }
+
+}
