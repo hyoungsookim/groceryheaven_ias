@@ -1,0 +1,166 @@
+{
+    "AWSTemplateFormatVersion":"2010-09-09",
+    "Description":"Create instances ready for CodeDeploy: Create up to 3 Amazon EC2 instances with an associated instance profile and install the AWS CodeDeploy Agent.",
+
+    "Resources": {
+
+        "GHCodeDeployTrustRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": "GHCodeDeployTrustRole",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2008-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "1",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "codedeploy.us-west-2.amazonaws.com"
+                                ]
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "Path": "/"
+            }
+        },
+
+        "GHCodeDeployRolePolicy": {
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "GHCodeDeployPolicy",
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Resource": [
+                                "*"
+                            ],
+                            "Action": [
+                                "ec2:Describe*",
+                                "ec2:TerminateInstances",
+                                "autoscaling:CompleteLifecycleAction",
+                                "autoscaling:DeleteLifecycleHook",
+                                "autoscaling:DescribeLifecycleHooks",
+                                "autoscaling:DescribeAutoScalingGroups",
+                                "autoscaling:PutLifecycleHook",
+                                "autoscaling:RecordLifecycleActionHeartbeat",
+                                "autoscaling:CreateAutoScalingGroup",
+                                "autoscaling:UpdateAutoScalingGroup",
+                                "autoscaling:EnableMetricsCollection",
+                                "autoscaling:DescribeAutoScalingGroups",
+                                "autoscaling:DescribePolicies",
+                                "autoscaling:DescribeScheduledActions",
+                                "autoscaling:DescribeNotificationConfigurations",
+                                "autoscaling:DescribeLifecycleHooks",
+                                "autoscaling:SuspendProcesses",
+                                "autoscaling:ResumeProcesses",
+                                "autoscaling:AttachLoadBalancers",
+                                "autoscaling:PutScalingPolicy",
+                                "autoscaling:PutScheduledUpdateGroupAction",
+                                "autoscaling:PutNotificationConfiguration",
+                                "autoscaling:PutLifecycleHook",
+                                "autoscaling:DescribeScalingActivities",
+                                "autoscaling:DeleteAutoScalingGroup",                                "Tag:getResources",
+                                "Tag:getTags",
+                                "Tag:getTagsForResource",
+                                "Tag:getTagsForResourceList",
+                                "sns:Publish",
+                                "cloudwatch:DescribeAlarms",
+                                "cloudwatch:PutMetricAlarm",
+                                "elasticloadbalancing:DescribeLoadBalancers",
+                                "elasticloadbalancing:DescribeInstanceHealth",
+                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+                                "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
+                                "elasticloadbalancing:DescribeTargetGroups",
+                                "elasticloadbalancing:DescribeTargetHealth",
+                                "elasticloadbalancing:RegisterTargets",
+                                "elasticloadbalancing:DeregisterTargets"                            ]
+                        }
+                    ]
+                },
+                "Roles":[
+                    {
+                        "Ref": "GHCodeDeployTrustRole"
+                    }
+                ]
+            }
+        },
+
+        "GHInstanceRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": "GHInstanceRole",
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "Path": "/"
+            }
+        },
+
+        "GHInstanceRolePolicy": {
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "GHInstanceRolePolicy",
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "autoscaling:Describe*",
+                                "cloudformation:Describe*",
+                                "cloudformation:GetTemplate",
+                                "s3:Get*",
+                                "s3:List*"
+                            ],
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "Roles": [
+                    {
+                        "Ref": "GHInstanceRole"
+                    }
+                ]
+            }
+        },
+
+        "GHInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "InstanceProfileName": "GHInstanceProfile",
+                "Path": "/",
+                "Roles": [
+                    {
+                        "Ref": "GHInstanceRole"
+                    }
+                ]
+            }
+        }
+    },
+
+    "Outputs": {
+        "CodeDeployTrustRoleARN": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "GHCodeDeployTrustRole",
+                    "Arn"
+                ]
+            }
+        }
+    }
+}
