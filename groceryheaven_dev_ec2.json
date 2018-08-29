@@ -41,7 +41,7 @@
                 "ImageId": "ami-a9d09ed1",
                 "KeyName": "key-pair-uw2-dev",
                 "InstanceType": "t2.micro",
-                "IamInstanceProfile": "CodeDeploy-EC2-Instance-Profile",
+                "IamInstanceProfile": "GHInstanceProfile",
                 "SecurityGroupIds": [ "sg-090e70eb820c84d76" ],
                 "SubnetId": "subnet-0d5aa8a5efe1e9672",
                 "Monitoring": "true",
