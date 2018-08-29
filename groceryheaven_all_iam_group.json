@@ -1,0 +1,23 @@
+{
+    "AWSTemplateFormatVersion":"2010-09-09",
+    "Description":"",
+
+    "Resources": {
+        "IamDevopsGroup": {
+            "Type": "AWS::IAM::Group",
+            "Properties": {
+                "GroupName": "DevOps",
+                "Path": "/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/AmazonEC2FullAccess", 
+                    "arn:aws:iam::aws:policy/AWSCodeDeployFullAccess",
+                    "arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess",
+                    "arn:aws:iam::aws:policy/AWSLambdaFullAccess",
+                    "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+                ]
+            }
+        }
+
+
+    }
+}
